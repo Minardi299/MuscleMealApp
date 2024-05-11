@@ -27,7 +27,8 @@
 			<StackPanel HorizontalAlignment="Center"
               VerticalAlignment="Center"
               Orientation="Horizontal">
-				<Button x:CompileBindings="False" Command="{Binding $parent[Window].DataContext.LoginUser}" >Login</Button>
+				<Button x:CompileBindings="False" Command="{Binding LoginUser}" >Register</Button>
+				<!--<Button x:CompileBindings="False" Command="{Binding $parent[Window].DataContext.LoginUser}" >Login</Button>-->
 				<Button x:CompileBindings="False" Command="{Binding $parent[Window].DataContext.Register}" >Register</Button>
 			</StackPanel>
 			

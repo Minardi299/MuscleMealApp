@@ -22,6 +22,7 @@ namespace MuscleMealUI.ViewModels
         }
         private MyDbContext _context;
         public bool IsLogin { get; set; } = false;
+
         private string _username = string.Empty;
         public string Username
         {
@@ -47,6 +48,9 @@ namespace MuscleMealUI.ViewModels
                 if(userManager.Login(Username, Password)) 
                 {
                     this.User = userManager.CurrentUser;
+
+                    IsLogin = true;
+                    this.RaisePropertyChanged(nameof(IsLogin));
                 }
             }
             catch (Exception ex) 
