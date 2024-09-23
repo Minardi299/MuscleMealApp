@@ -12,9 +12,9 @@ namespace MuscleMealUI.Services
     {
         private readonly User _user;
         private readonly MyDbContext _context;
-        public UserService(MyDbContext context, User user)
+        public UserService(User user)
         {
-            this._context = context;
+            this._context = MyDbContext.GetInstance();
             this._user = user;
         }
 
@@ -36,8 +36,13 @@ namespace MuscleMealUI.Services
         }
         public void RemoveRecipe(Recipe recipe)
         {
+            var ingredients = _context.Ingredients.Where(i => i.Recipe.ID == recipe.ID).ToList();
+            _context.Ingredients.RemoveRange(ingredients);
+
             this._user.Recipes.Remove(recipe);
-            this._context.SaveChanges();
+            _context.Recipe.Remove(recipe);
+
+            _context.SaveChanges();
         }
         // public void AddIngredient(string name, double amount, string unit)
         // {
@@ -79,13 +84,21 @@ namespace MuscleMealUI.Services
         public List<Recipe> GetCurrentUserRecipes()
         {
             // return _context.Recipe.Where(r => r.Owner.ID == this._user.ID).ToList();   
-            return this._user.Recipes.ToList();
+            return _context.Recipe
+                  .Where(r => r.Owner.ID == this._user.ID)
+                  .Include(r => r.Ingredients)
+                  .ToList();
         }
 
         public List<Recipe> GetCurrentUserFavorites()
         {//not working as expected yet, doesnt get the current usre favorites list
             // return _context.Recipe.Where(r => r.FavoriteBy.Any(f => f.ID == _user.ID)).ToList();   
-            return this._user.Favorites.ToList();
+            /*return this._user.Favorites.ToList();*/
+            return _context.Recipe
+                .Where(r => r.FavoriteBy.Any(f => f.ID == _user.ID))
+                .Include(r => r.Ingredients)
+                .Include(r => r.Owner)
+                .ToList();
         }
         public static List<Recipe> GetAnotherUserRecipes(User user)
         {

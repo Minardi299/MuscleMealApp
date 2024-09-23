@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:MuscleMealUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MuscleMealUI.Views.RecipeView"
+			 x:DataType="vm:RecipeViewModel">
+
+	<StackPanel>
+		<TextBlock Text="Recipe Details" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+		<TextBlock Text="Owner:" FontWeight="Bold"/>
+		<TextBlock Text="{Binding Owner.Username}" Margin="0,0,0,10"/>
+		<TextBlock Text="Name:" FontWeight="Bold"/>
+		<TextBlock Text="{Binding Name}" Margin="0,0,0,10"/>
+
+		<TextBlock Text="Description:" FontWeight="Bold"/>
+		<TextBlock Text="{Binding Description}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+		<TextBlock Text="Instructions:" FontWeight="Bold"/>
+		<TextBlock Text="{Binding Instruction}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+		<TextBlock Text="Ingredients:" FontWeight="Bold"/>
+		<ItemsControl ItemsSource="{Binding Ingredients}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="10" Margin="5">
+						<StackPanel Orientation="Horizontal" Margin="5,0">
+							<TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
+							<TextBlock Text="{Binding Amount}" FontSize="14" Margin="0,0,10,0"/>
+							<TextBlock Text="{Binding Unit}" FontSize="14"/>
+						</StackPanel>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+			<Button Content="Delete Recipe"
+				    Command="{Binding DeleteRecipeCommand}"
+				    HorizontalAlignment="Center"
+				    IsVisible="{Binding IsOwner}"
+				    Margin="20"
+				    />
+			<Button Content="Add to Favorites"
+					IsVisible="{Binding IsNotFavorited}"
+					Command="{Binding AddToFavoritesCommand}"
+                    HorizontalAlignment="Center"
+					Margin="20"/>
+			<Button Content="Remove from Favorites"
+					IsVisible="{Binding IsFavorited}"
+					Command="{Binding RemoveFromFavoritesCommand}"
+					HorizontalAlignment="Center"
+					Margin="20"/>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

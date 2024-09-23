@@ -24,7 +24,13 @@ namespace MuscleMealUI.Models
             get { return this._description; }
             set { this._description = value; }
         }
-        #pragma warning disable CS8618
+        private string _instruction;
+        public string  Instruction
+        {
+            get { return this._instruction; }
+            set { this._instruction = value; }
+        }
+         #pragma warning disable CS8618
         //this one is for visual studio to stop warning a field is nullable
         private User _owner;
         [InverseProperty("Recipes")]
@@ -39,23 +45,24 @@ namespace MuscleMealUI.Models
             get; set;
         }
 
-        private List<Ingredient> _Ingrdients = new();
+        private List<Ingredient> _ingrdients = new();
         public List<Ingredient> Ingredients
         {
-            get { return _Ingrdients; }
-            set { _Ingrdients = value; }
+            get { return _ingrdients; }
+            set { _ingrdients = value; }
         }
 
 
 
-        public Recipe(string name, string? description, User owner, List<Ingredient> ingredients)
+        public Recipe(string name, string? description, User owner, List<Ingredient> ingredients, string instruction)
         {
-            this.Name = name ?? "no name"!;
-            this.Description = description;
-            this.Owner = owner ?? throw new ArgumentNullException(nameof(owner));
-            this._Ingrdients = ingredients?? new List<Ingredient>();
+            this._name = name ?? "no name"!;
+            this._description = description;
+            this._owner = owner ?? throw new ArgumentNullException(nameof(owner));
+            this._ingrdients = ingredients ?? new List<Ingredient>();
+            this._instruction = instruction;
         }
-        private Recipe() { }
+        internal Recipe() { }
         public override string ToString()
         {
             return $"name: {this.Name}, Desciption {this.Description} by {this.Owner?.Username}";

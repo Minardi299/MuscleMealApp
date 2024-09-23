@@ -1,35 +1,26 @@
-    <UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="using:MuscleMealUI.ViewModels"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:MuscleMealUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MuscleMealUI.Views.LoginView"
-			 x:DataType="vm:LoginViewModel"
-			 Background="Black">
-		<StackPanel HorizontalAlignment="Center"
-              VerticalAlignment="Center">
-			<Image Source="/Assets/maxresdefault.png" Width="300" />
-			<TextBlock HorizontalAlignment="Center">Welcome to Muscle Meal</TextBlock>
-			<StackPanel>
-				<TextBlock>Username</TextBlock>
-				<TextBox 
-					Watermark="Username" 
-					Text="{Binding Username, Mode=TwoWay}"
-					/>
-				<TextBlock>Password</TextBlock>
-				<TextBox 
-					Watermark="Password"
-					
-					Text="{Binding Password, Mode=TwoWay}"
-					/>
-			</StackPanel >
-			<StackPanel HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Orientation="Horizontal">
-				<Button x:CompileBindings="False" Command="{Binding $parent[Window].DataContext.LoginUser}" >Login</Button>
-				<Button x:CompileBindings="False" Command="{Binding $parent[Window].DataContext.Register}" >Register</Button>
-			</StackPanel>
-			
-		</StackPanel >
+             x:DataType="vm:LoginViewModel">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Image Source="/Assets/maxresdefault.png" Width="300" />
+        <TextBlock HorizontalAlignment="Center">Welcome to Muscle Meal</TextBlock>
+        <StackPanel>
+            <TextBlock Width="300">Username</TextBlock>
+            <TextBox Width="300" Watermark="Username" Text="{Binding Username, Mode=TwoWay}" />
+            <TextBlock Width="300">Password</TextBlock>
+            <TextBox Width="300" Classes="revealPasswordButton" PasswordChar="•"  Watermark="Password" Text="{Binding Password, Mode=TwoWay}" />
+        </StackPanel>
+
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontSize="16" Margin="10,0,5,0" />
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <Button x:CompileBindings="False" Command="{Binding Login}">Login</Button>
+            <Button x:CompileBindings="False" Command="{Binding $parent[Window].DataContext.RegisterCommand}">Register</Button>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

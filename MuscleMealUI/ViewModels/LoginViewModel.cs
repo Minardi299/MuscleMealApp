@@ -9,25 +9,35 @@ using MuscleMealUI.Services;
 using ReactiveUI;
 using System.Reactive;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reactive.Linq;
 
 namespace MuscleMealUI.ViewModels
 {
-    public class LoginViewModel:ViewModelBase
+    public class LoginViewModel : ViewModelBase
     {
-        public LoginViewModel(MyDbContext dbContext)
+        public LoginViewModel(MainWindowViewModel main)
         {
-            var loginEnabled = this.WhenAnyValue(x => x.Username, x => !string.IsNullOrWhiteSpace(x));
-            this.Login = ReactiveCommand.Create(() => { LoginUser(); }, loginEnabled);
-            _context = dbContext;
+            var loginEnabled = this.WhenAnyValue(
+                x => x.Username,
+                x => x.Password,
+                (name, password) =>
+                !string.IsNullOrEmpty(name) &&
+                !string.IsNullOrEmpty(password));
+            Login = ReactiveCommand.Create(() => { LoginUser(); }, loginEnabled);
+            _main = main;
+            this._context = MyDbContext.GetInstance();
+
         }
+        private readonly MainWindowViewModel _main;
         private MyDbContext _context;
-        public bool IsLogin { get; set; } = false;
+
+
         private string _username = string.Empty;
         public string Username
         {
             get { return this._username; }
             set { this.RaiseAndSetIfChanged(ref _username, value); }
-        
+
         }
         private string _password;
         public string Password
@@ -35,28 +45,38 @@ namespace MuscleMealUI.ViewModels
             get { return _password; }
             set { this.RaiseAndSetIfChanged(ref _password, value); }
         }
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set { this.RaiseAndSetIfChanged(ref _errorMessage, value); }
+        }
+
         public ReactiveCommand<Unit, Unit> Login { get; }
-        public ReactiveCommand<Unit, Unit> Register{ get; set; }
-        
         public User? User { get; private set; }
         public User LoginUser()
         {
-            UserManager userManager = new UserManager(_context);
-            try 
+            UserManager userManager = new UserManager();
+            try
             {
-                if(userManager.Login(Username, Password)) 
+                if (userManager.Login(Username, Password))
                 {
                     this.User = userManager.CurrentUser;
+
+                    this._main.CurrentUser = this.User;
+                    this._main.ContentViewModel = new HomeViewModel(_main);
+                }
+                else
+                {
+                    ErrorMessage = "Login failed. Wrong username or password. Please try again!";
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                return null;
+                ErrorMessage = $"Error occurred: {ex.Message}";
             }
             return this.User;
         }
+
     }
 }
-
-
-//xmlns: vm = "clr-namespace:MuscleMealUI.ViewModels;assembly=MuscleMealUI"

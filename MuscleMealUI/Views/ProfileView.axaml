@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:MuscleMealUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="vm:ProfileViewModel"
+             x:Class="MuscleMealUI.Views.ProfileView">
+
+	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+		<StackPanel >
+			<TextBlock FontSize="14" FontWeight="Bold" Text=" Hi! My Name is"/>
+			<TextBlock HorizontalAlignment="Left" Text="{Binding User.Username}" FontWeight="ExtraBold" FontSize="100" Foreground="Orange" FontFamily="NunitoFont"/>
+		</StackPanel>
+		<TextBlock Text="About me:" FontSize="14" FontWeight="Bold"/>
+		<Border HorizontalAlignment="Left" Width="300" Height="150" SizeChanged="" Margin="10" Background="Orange" BorderThickness="1" CornerRadius="4">
+			<ScrollViewer>
+				<TextBlock Foreground="#1e1e1e" FontWeight="Bold" Text="{Binding User.Bio}" TextWrapping="Wrap" Padding="10" FontFamily="NunitoFont"/>
+			</ScrollViewer>
+		</Border>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">	
+			<Button Margin="10" Content="Update Profile" Command="{Binding UpdateProfileCommand}" />
+			<Button Margin="10" Content="Delete Profile" Command="{Binding DeleteProfileCommand}"/>
+			<Button Margin="10" Content="Change Password" Command="{Binding ChangePasswordCommand}"/>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

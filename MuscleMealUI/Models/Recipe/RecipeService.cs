@@ -10,17 +10,20 @@ namespace MuscleMealUI.Services
 {
     public class RecipeService
     {
-        private readonly MyDbContext _context;
+        private readonly MyDbContext _context = MyDbContext.GetInstance();
         private Recipe? _recipe;
         public Recipe? CurrentRecipe { get { return _recipe; } set { } }
 
-        public RecipeService(MyDbContext context)
+        public RecipeService()
         {
-            this._context = context;
+
         }
         public List<Recipe> GetAllRecipes()
         {
-            return this._context.Recipe.ToList();
+            return this._context.Recipe
+                .Include(recipe => recipe.Ingredients)
+                .Include(recipe => recipe.Owner)
+                .ToList();
         }
         public void SelectRecipe(string name)
         {
@@ -39,7 +42,7 @@ namespace MuscleMealUI.Services
         public List<Recipe>? SearchRecipeByName(string name)
         {
             try
-            { 
+            {
                 return _context.Recipe.Where(r => r.Name.Contains(name)).ToList();
             }
             catch (Exception ex)

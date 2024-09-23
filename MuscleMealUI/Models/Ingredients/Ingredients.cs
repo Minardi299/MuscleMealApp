@@ -38,7 +38,7 @@ namespace MuscleMealUI.Models
             get { return _recipe; }
             set { _recipe = value; }
         }
-        private Ingredient() { }
+        internal Ingredient() { }
         public Ingredient(string? name, double? amount, string? unit)
         {
             this._name = name;

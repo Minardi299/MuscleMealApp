@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using MuscleMealUI.ViewModels;
 
 namespace MuscleMealUI.Views
 {
@@ -7,6 +8,7 @@ namespace MuscleMealUI.Views
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

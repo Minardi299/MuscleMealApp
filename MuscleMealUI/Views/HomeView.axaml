@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:MuscleMealUI.ViewModels"
+			 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="vm:HomeViewModel"
+			 Background="Transparent"
+             x:Class="MuscleMealUI.Views.HomeView">
+	<Grid > 
+		<SplitView IsPaneOpen="{Binding IsPaneOpen}"
+				   OpenPaneLength="300"
+				   CompactPaneLength="50"
+				   DisplayMode="CompactInline"				   >
+			<SplitView.Pane>
+				<DockPanel LastChildFill="True">
+					<StackPanel DockPanel.Dock="Top" Spacing="5" Margin="5">
+						<Button Command="{Binding TogglePaneCommand}"
+								Cursor="Hand">
+							<Image Width="24"
+                                   Height="24"
+                                   Stretch="Uniform"
+                                   Source="avares://MuscleMealUI/Assets/menu_24dp_FILL0_wght400_GRAD0_opsz24.png"/>
+						</Button>
+						<Button HorizontalAlignment="Stretch" Cursor="Hand" Command="{Binding AllRecipesCommand}">
+							<StackPanel Orientation="Horizontal">
+								<Image Width="24" 
+									   Height="24" 
+									   Stretch="Uniform" 
+									   Source="avares://MuscleMealUI/Assets/browse_gallery_24dp_FILL0_wght400_GRAD0_opsz24.png" Margin="0,0,10,0"/>
+								<TextBlock Text="All Recipes" VerticalAlignment="Center"/>
+							</StackPanel>
+						</Button>
+						<Button
+							HorizontalAlignment="Stretch"
+							Cursor="Hand"
+							Command="{Binding MyRecipesCommand}">
+							<StackPanel Orientation="Horizontal">
+								<Image Width="24"
+									   Height="24"
+									   Stretch="Uniform"
+									   Source="avares://MuscleMealUI/Assets/dataset_24dp_FILL0_wght400_GRAD0_opsz24.png" Margin="0,0,10,0"/>
+								<TextBlock Text="My Recipes" VerticalAlignment="Center"/>
+							</StackPanel>
+						</Button>
+						<Button
+							HorizontalAlignment="Stretch"
+							Cursor="Hand"
+							Command="{Binding MyFavoritesCommand}">
+							<StackPanel Orientation="Horizontal">
+								<Image Width="24"
+									   Height="24"
+									   Stretch="Uniform"
+									   Source="avares://MuscleMealUI/Assets/favorite_24dp_FILL0_wght400_GRAD0_opsz24.png" Margin="0,0,10,0"/>
+								<TextBlock Text="My Favorite" VerticalAlignment="Center"/>
+							</StackPanel>
+						</Button>
+						<Button
+							HorizontalAlignment="Stretch"
+							Cursor="Hand"
+							Command="{Binding MyProfileCommand}">
+							<StackPanel Orientation="Horizontal">
+								<Image Width="24"
+									   Height="24"
+									   Stretch="Uniform"
+									   Source="avares://MuscleMealUI/Assets/account_circle_24dp_FILL0_wght400_GRAD0_opsz24.png" Margin="0,0,10,0"/>
+								<TextBlock Text="My Profile" VerticalAlignment="Center"/>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+					<StackPanel DockPanel.Dock="Bottom" Spacing="5" Margin="5" VerticalAlignment="Bottom">
+						<Button 
+							HorizontalAlignment="Stretch"
+							Cursor="Hand" 
+							Foreground="Red"
+							Background="Pink"
+							Command="{Binding LogoutCommand}">
+							<StackPanel Orientation="Horizontal">
+								
+							<Image Width="24"
+								   Height="24"
+									   Stretch="Uniform"
+									   Source="avares://MuscleMealUI/Assets/exit_to_app_24dp_FILL0_wght400_GRAD0_opsz24.png" Margin="0,0,10,0"/>
+								<TextBlock Text="Logout" VerticalAlignment="Center"/>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+				</DockPanel>
+			</SplitView.Pane>
+			<SplitView.Content>
+				<ContentControl Content="{Binding CurrentView}" Margin="20"/>
+			</SplitView.Content>
+		</SplitView>
+	</Grid>
+</UserControl>

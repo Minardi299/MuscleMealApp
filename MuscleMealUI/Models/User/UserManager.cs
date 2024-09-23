@@ -14,9 +14,9 @@ namespace MuscleMealUI.Services
 
         private readonly MyDbContext _context;
         public MyDbContext Context { get { return this._context; } }
-        public UserManager(MyDbContext context)
+        public UserManager()
         {
-            this._context = context;
+            this._context = MyDbContext.GetInstance();
             this.CurrentUser = null;
         }
         public User? CurrentUser { get; private set; }
@@ -74,7 +74,7 @@ namespace MuscleMealUI.Services
             CurrentUser = null;
         }
 
-        private bool VerifyPassword(string enteredPassword, byte[] storedHash, byte[] storedSalt)
+        public bool VerifyPassword(string enteredPassword, byte[] storedHash, byte[] storedSalt)
         {
             // Generate the hash of the entered password using the same salt and method
             int iterations = 1000;
@@ -111,12 +111,12 @@ namespace MuscleMealUI.Services
             return Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
         }
 
-/*        private bool VerifyPassword(string password, string storedHash)
-        {
-            var hashOfInput = HashPassword(password);
-            return hashOfInput == storedHash;
-        }
-*/
+        /*        private bool VerifyPassword(string password, string storedHash)
+                {
+                    var hashOfInput = HashPassword(password);
+                    return hashOfInput == storedHash;
+                }
+        */
         public void DeleteUser(User user)
         {
             _context.User.Remove(user);
@@ -160,6 +160,35 @@ namespace MuscleMealUI.Services
                 Console.WriteLine($"Error deleting user account: {ex.Message}");
                 return false;
             }
+        }
+
+        // To change the user password by taking the old one and if its true gets the new one 
+        public bool ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            var user = GetUserByUsername(username);
+            if (user == null)
+            {
+                Console.WriteLine("User not found.");
+                return false;
+            }
+
+            if (!VerifyPassword(oldPassword, user.Password, user.PasswordSalt))
+            {
+                Console.WriteLine("Old password is incorrect.");
+                return false;
+            }
+
+            byte[] newPasswordHash, newPasswordSalt;
+            CreatePasswordHash(newPassword, out newPasswordHash, out newPasswordSalt);
+
+            user.Password = newPasswordHash;
+            user.PasswordSalt = newPasswordSalt;
+
+            _context.User.Update(user);
+            _context.SaveChanges();
+
+            Console.WriteLine("Password changed successfully.");
+            return true;
         }
 
     }

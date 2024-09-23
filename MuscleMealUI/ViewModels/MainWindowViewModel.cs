@@ -2,44 +2,68 @@
 using MuscleMealUI.Services;
 using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.Reactive;
 
 namespace MuscleMealUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private MyDbContext _context = new MyDbContext();
-#pragma warning disable CA1822 // Mark members as static
+        internal readonly MyDbContext _context = MyDbContext.GetInstance();
         private ViewModelBase _contentViewModel;
         public ViewModelBase ContentViewModel
         {
-            get => _contentViewModel;
-            private set => this.RaiseAndSetIfChanged(ref _contentViewModel, value);
+            get { return _contentViewModel; }
+            set => this.RaiseAndSetIfChanged(ref _contentViewModel, value);
         }
-        public User CurrentUser { get; private set; }
-        public void LoginUser()
+#pragma warning disable CA1822 // Mark members as static
+        private User _currentUser;
+        public User CurrentUser
         {
-            LoginViewModel loginViewModel = new LoginViewModel(this._context);
-            loginViewModel.Login.Subscribe(x =>
-            {
-                this.CurrentUser = loginViewModel.LoginUser();
-                if (this.CurrentUser != null)
-                {
-                    loginViewModel.IsLogin = true;
-                }
-            });
-            ContentViewModel = loginViewModel;
+            get { return _currentUser; }
+            set => this.RaiseAndSetIfChanged(ref _currentUser, value);
         }
-      
-        public void Register()
-        {
-            Console.WriteLine("registration");
-        }
+        private static MainWindowViewModel? _instance = null;
+
+        // For all the recipes
+        public ReactiveCommand<Unit, Unit> NavigateToRecipeCommand { get; }
+        public ReactiveCommand<Unit, Unit> RegisterCommand { get; }
+
+
+#pragma warning restore CA1822 // Mark members as static
         public MainWindowViewModel()
         {
-            LoginUser();    
+            LoginViewModel vm = new LoginViewModel(this);
 
+/*            NavigateToRecipeCommand = ReactiveCommand.Create(NavigateToAllRecipe);*/
+            vm.Login.Subscribe(x => this.CurrentUser = vm.User);
+            RegisterCommand = ReactiveCommand.Create(NavigateToRegister);
+            this.ContentViewModel = vm;
         }
-#pragma warning restore CA1822 // Mark members as static
+        /*        public void Register()
+                {
+                    //UserManager userManager = new UserManager(_context);
+                    RegistrationViewModel vm = new RegistrationViewModel(this._context);
+                    this.ContentViewModel = vm;
+                }*/
+
+/*        private void NavigateToAllRecipe()
+        {
+            Debug.WriteLine("MainWindowViewModel: NavigateToAllRecipe called");
+            this.ContentViewModel = new AllRecipeViewModel();
+        }
+*/
+        private void NavigateToRegister()
+        {
+            Debug.WriteLine("MainWindowViewModel: NavigateToRegister called");
+            this.ContentViewModel = new RegistrationViewModel(this);
+        }
+
+        // To navigate to the login page(main window)
+        public void NavigateToLogin()
+        {
+            Debug.WriteLine("MainWindowViewModel: NavigateToLogin called");
+            this.ContentViewModel = new LoginViewModel(this);
+        }
     }
 }
